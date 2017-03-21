@@ -50,16 +50,16 @@
         <el-col :span="20">
           <el-form v-if="taskList[0]" label-position="left" inline class="display-table-expand">
             <el-form-item label="状态">
-              <span>{{ taskList[0].State }}</span>
+              <el-tag type="success">{{ taskList[0].State }}</el-tag>
             </el-form-item>
             <el-form-item label="任务ID">
-              <span>{{ taskList[0].TaskId }}</span>
+              <el-tag type="success">{{ taskList[0].TaskId }}</el-tag>
             </el-form-item>
             <el-form-item label="开始时间">
-              <span>{{ taskList[0].StartTime }}</span>
+              <el-tag type="success">{{ taskList[0].StartTime }}</el-tag>
             </el-form-item>
             <el-form-item label="结束时间">
-              <span>{{ taskList[0].EndTime }}</span>
+              <el-tag type="success">{{ taskList[0].EndTime }}</el-tag>
             </el-form-item>
           </el-form>
           <i v-else class="el-icon-time"> 请先提交一个任务</i>

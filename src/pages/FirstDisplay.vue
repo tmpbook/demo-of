@@ -38,7 +38,10 @@
           输出 ->
         </el-col>
         <el-col :span="22">
-          <img style="height: 285px" v-if="outputImageUrl" :src="outputImageUrl" class="avatar">
+          <template v-if="outputImageUrl">
+            <img style="height: 285px" :src="outputImageUrl" class="avatar">
+            <el-button @click="dialogTableVisible = true" size="small" type="success">显示详情</el-button>
+          </template>
           <i v-else class="el-icon-time"> 请先提交任务</i>
         </el-col>
       </el-row>
@@ -61,7 +64,7 @@
                 <el-tag type="primary">{{ taskList[0].CPUUsage }}</el-tag>
               </el-form-item>
               <el-form-item label="9 分钱可以处理相同图片:">
-                <el-tag type="danger">{{ count }}</el-tag> 张
+                约 <el-tag type="danger">{{ count }}</el-tag> 张
               </el-form-item>
             </el-form>
             <i v-else class="el-icon-time"> 请先提交任务</i>

@@ -4,29 +4,29 @@
       <div slot="header" class="clearfix">
         图片风格化
       </div>
-    
-
-      <el-row style="margin-top: 30px">
-        <el-col :span="12">
-          <el-upload
-            class="upload-demo"
-            ref="upload"
-            action="//jsonplaceholder.typicode.com/posts/"
-            :file-list="fileList"
-            :auto-upload="false">
-            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload"  :loading="searching">提交任务</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过5M</div>
-          </el-upload>
-        </el-col>
-        <el-col :span="12"></el-col>
-      </el-row>
 
       <el-row style="margin-top: 30px">
         <el-col :span="12">
           <img style="" v-if="inputImageUrl" :src="inputImageUrl" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-col>
+      </el-row>
+    
+
+      <el-row style="margin-top: 30px">
+        <el-col :span="12">
+          <el-upload
+            class="upload-demo"
+            action="//jsonplaceholder.typicode.com/posts/"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :file-list="fileList"
+            list-type="picture">
+            <el-button size="small" type="primary" @click="submitUpload">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过5M</div>
+          </el-upload>
+        </el-col>
+        <el-col :span="12"></el-col>
       </el-row>
 
       <el-row :gutter="20" style="margin-top: 30px">
@@ -40,6 +40,9 @@
 </template>
 
 <style>
+.el-upload-list--picture .el-upload-list__item-thumbnail {
+  width: 120px
+}
 </style>
 
 <script>
@@ -100,6 +103,7 @@ export default {
         })
         // vm.responseList = response.data
         vm.searching = false
+        vm.outputImageUrl = "/tmp/out.png"
       })
       .catch(function (error) {
         console.info(error)

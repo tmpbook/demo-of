@@ -18,6 +18,6 @@ export default {
 </script>
 <style lang="scss">
 .content {
-  padding: 30px;
+  padding: 10px;
 }
 </style>

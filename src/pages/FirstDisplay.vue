@@ -15,7 +15,7 @@
               action="//jsonplaceholder.typicode.com/posts/"
               :file-list="fileList"
               :auto-upload="true">
-              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+              <el-button v-show="true" slot="trigger" size="small" type="primary" disabled>选取文件</el-button>
               <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload" :loading="searching">提交任务</el-button>
               <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过5M</div>
             </el-upload>
@@ -25,19 +25,19 @@
 
 
       <el-row style="margin-top: 30px">
-        <el-col :span="4">
-          输入 - >
+        <el-col :span="2">
+          输入 ->
         </el-col>
-        <el-col :span="20">
+        <el-col :span="22">
           <img style="" v-if="inputImageUrl" :src="inputImageUrl" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-col>
       </el-row>
       <el-row style="margin-top: 20px">
-        <el-col :span="4">
-          输出 - >
+        <el-col :span="2">
+          输出 ->
         </el-col>
-        <el-col :span="20">
+        <el-col :span="22">
           <img style="height: 285px" v-if="outputImageUrl" :src="outputImageUrl" class="avatar">
           <i v-else class="el-icon-time"> 请先提交任务</i>
         </el-col>
@@ -171,7 +171,7 @@ export default {
     }
   },
   mounted () {
-    document.title = '运营 · 专线客户信息管理'
+    document.title = 'TIC · UGC通用计算演示'
     this.fileList = [{name: 'sh.jpeg', url: inputImg}]
     this.inputImageUrl = inputImg
     this.outputImageUrl = ''

@@ -127,7 +127,7 @@ export default {
         vm.active = 3
         vm.searching = false
         vm.outputImageUrl = '/data/out.png'
-        this.getTaskList('cn-bj2.ugchub.service.ucloud.cn/tic_demo/doodle_demo:v1.4')
+        vm.getTaskList('cn-bj2.ugchub.service.ucloud.cn/tic_demo/doodle_demo:v1.4')
       })
       .catch(function (error) {
         console.info(error)

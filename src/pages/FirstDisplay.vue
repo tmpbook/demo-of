@@ -90,7 +90,7 @@ export default {
         OutputFileName: 'out.png',
         ProjectId: 'org-a3nvhv'
       }
-      axios.get(url + 'submit_task/', {
+      axios.get(url + 'api/submit_task/', {
         params: payload
       })
       .then(function (response) {

@@ -48,7 +48,20 @@
           分析
         </el-col>
         <el-col :span="20">
-          <p style="height: 285px" v-if="taskList" class="avatar">{{ taskList }}</p>
+          <el-form v-if="taskList" label-position="left" inline class="display-table-expand">
+            <el-form-item label="Vlan">
+              <span>{{ taskList[0].State }}</span>
+            </el-form-item>
+            <el-form-item label="Vlan">
+              <span>{{ taskList[0].TaskId }}</span>
+            </el-form-item>
+            <el-form-item label="Vlan">
+              <span>{{ taskList[0].StartTime }}</span>
+            </el-form-item>
+            <el-form-item label="Vlan">
+              <span>{{ taskList[0].EndTime }}</span>
+            </el-form-item>
+          </el-form>
           <i v-else class="el-icon-time"> 请先提交一个任务</i>
         </el-col>
       </el-row>

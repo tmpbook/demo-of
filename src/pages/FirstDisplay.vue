@@ -2,15 +2,15 @@
   <div class="crud">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-      <div style="float: right; margin-top: 20px">图像画风转换</div>
-          <el-steps :space="100" :active="active" style="">
-            <el-step icon="edit" title="选取文件"></el-step>
-            <el-step icon="upload" title="提交算法"></el-step>
-            <el-step icon="picture" title="返回结果"></el-step>
-            <el-step icon="more" title="详细参数"></el-step>
-          </el-steps>
+        <el-steps :space="100" :active="active" finish-status="success" style="float: right;">
+          <el-step title="选取文件"></el-step>
+          <el-step title="提交算法"></el-step>
+          <el-step title="返回结果"></el-step>
+          <el-step title="详细参数"></el-step>
+        </el-steps>
+        <div style="height: 70px">图像画风转换</div>
       </div>
-    
+
       <el-row>
         <el-col :span="12">
           <el-upload
@@ -27,7 +27,7 @@
 
       <el-row style="margin-top: 30px">
         <el-col :span="4">
-          原图
+          输入
         </el-col>
         <el-col :span="20">
           <img style="" v-if="inputImageUrl" :src="inputImageUrl" class="avatar">
@@ -36,35 +36,33 @@
       </el-row>
       <el-row style="margin-top: 20px">
         <el-col :span="4">
-          结果
+          输出
         </el-col>
         <el-col :span="20">
           <img style="height: 285px" v-if="outputImageUrl" :src="outputImageUrl" class="avatar">
-          <i v-else class="el-icon-time"> 请先提交一个任务</i>
+          <i v-else class="el-icon-time"> 请先提交任务</i>
         </el-col>
       </el-row>
-      <el-row style="margin-top: 20px">
-        <el-col :span="4">
-          分析
-        </el-col>
-        <el-col :span="20">
-          <el-form v-if="taskList[0]" label-position="left" inline class="display-table-expand">
-            <el-form-item label="状态">
-              <el-tag type="success">{{ taskList[0].State }}</el-tag>
-            </el-form-item>
-            <el-form-item label="任务ID">
-              <el-tag type="success">{{ taskList[0].TaskId }}</el-tag>
-            </el-form-item>
-            <el-form-item label="开始时间">
-              <el-tag type="success">{{ taskList[0].StartTime }}</el-tag>
-            </el-form-item>
-            <el-form-item label="结束时间">
-              <el-tag type="success">{{ taskList[0].EndTime }}</el-tag>
-            </el-form-item>
-          </el-form>
-          <i v-else class="el-icon-time"> 请先提交一个任务</i>
-        </el-col>
-      </el-row>
+      <el-dialog title="本次运行结果" v-model="dialogTableVisible">
+        <el-row style="margin-top: 20px">
+            <el-form v-if="taskList[0]" label-position="left" class="display-table-expand">
+              <el-form-item label="状态:">
+                <el-tag type="success">{{ taskList[0].State }}</el-tag>
+              </el-form-item>
+              <el-form-item label="任务ID:">
+                <el-tag type="success">{{ taskList[0].TaskId }}</el-tag>
+              </el-form-item>
+              <el-form-item label="开始时间:">
+                <el-tag type="success">{{ taskList[0].StartTime | time_formatter }}</el-tag>
+              </el-form-item>
+              <el-form-item label="结束时间:">
+                <el-tag type="success">{{ taskList[0].EndTime | time_formatter }}</el-tag>
+              </el-form-item>
+            </el-form>
+            <i v-else class="el-icon-time"> 请先提交任务</i>
+        </el-row>
+      </el-dialog>
+
     </el-card>
   </div>
 </template>
@@ -90,17 +88,13 @@ export default {
   name: 'Demo1',
   data () {
     return {
+      dialogTableVisible: false,
       active: 1,
       searching: false,
       fileList: [],
       inputImageUrl: '',
       outputImageUrl: '',
-      taskList: [{
-        State: '',
-        TaskId: '',
-        StartTime: '',
-        EndTime: ''
-      }]
+      taskList: [{}]
     }
   },
   filters: {
@@ -169,6 +163,7 @@ export default {
         })
         vm.taskList = response.data['TaskSet']
         vm.active = 4
+        vm.dialogTableVisible = true
       })
       .catch(function (error) {
         console.info(error)

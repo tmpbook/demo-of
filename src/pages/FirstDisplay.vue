@@ -155,7 +155,6 @@ export default {
     },
     getTaskList (imageName) {
       let vm = this
-      vm.searching = true
       var payload = {
         Region: 'cn-bj2',
         ImageName: imageName // 'cn-bj2.ugchub.service.ucloud.cn/tic_demo/doodle_demo:v1.4'
@@ -174,7 +173,6 @@ export default {
       .catch(function (error) {
         console.info(error)
         vm.$message.error('服务器提了一个错误，稍后再试')
-        vm.searching = false
       })
     }
   },

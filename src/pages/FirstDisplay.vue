@@ -2,10 +2,12 @@
   <div class="crud">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
+      <div style="float: right; margin-top: 20px">图像画风转换</div>
           <el-steps :space="100" :active="active" style="">
             <el-step icon="edit" title="选取文件"></el-step>
-            <el-step icon="upload" title="提交任务"></el-step>
+            <el-step icon="upload" title="提交算法"></el-step>
             <el-step icon="picture" title="返回结果"></el-step>
+            <el-step icon="more" title="详细参数"></el-step>
           </el-steps>
       </div>
     
@@ -41,6 +43,15 @@
           <i v-else class="el-icon-time"> 请先提交一个任务</i>
         </el-col>
       </el-row>
+      <el-row style="margin-top: 20px">
+        <el-col :span="4">
+          分析
+        </el-col>
+        <el-col :span="20">
+          <p style="height: 285px" v-if="taskList" class="avatar">{{ taskList }}</p>
+          <i v-else class="el-icon-time"> 请先提交一个任务</i>
+        </el-col>
+      </el-row>
     </el-card>
   </div>
 </template>
@@ -70,7 +81,8 @@ export default {
       searching: false,
       fileList: [],
       inputImageUrl: '',
-      outputImageUrl: ''
+      outputImageUrl: '',
+      taskList: []
     }
   },
   filters: {
@@ -115,6 +127,30 @@ export default {
         vm.active = 3
         vm.searching = false
         vm.outputImageUrl = '/data/out.png'
+        this.getTaskList('cn-bj2.ugchub.service.ucloud.cn/tic_demo/doodle_demo:v1.4')
+      })
+      .catch(function (error) {
+        console.info(error)
+        vm.$message.error('服务器提了一个错误，稍后再试')
+        vm.searching = false
+      })
+    },
+    getTaskList (imageName) {
+      let vm = this
+      vm.searching = true
+      var payload = {
+        Region: 'cn-bj2',
+        ImageName: imageName // 'cn-bj2.ugchub.service.ucloud.cn/tic_demo/doodle_demo:v1.4'
+      }
+      axios.get(url + 'api/list_task/', {
+        params: payload
+      })
+      .then(function (response) {
+        vm.$message({
+          message: '请求处理成功',
+          type: 'success'
+        })
+        vm.taskList = response.data['TaskSet']
       })
       .catch(function (error) {
         console.info(error)

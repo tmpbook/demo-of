@@ -42,7 +42,7 @@
           <i v-else class="el-icon-time"> 请先提交任务</i>
         </el-col>
       </el-row>
-      <el-dialog title="本次运行结果" v-model="dialogTableVisible">
+      <el-dialog title="本次运行结果" v-model="dialogTableVisible" size="large">
         <el-row style="margin-top: 20px">
             <el-form v-if="taskList[0]" label-position="left" class="display-table-expand">
               <el-form-item label="状态:">
@@ -56,6 +56,12 @@
               </el-form-item>
               <el-form-item label="结束时间:">
                 <el-tag type="success">{{ taskList[0].EndTime | time_formatter }}</el-tag>
+              </el-form-item>
+              <el-form-item label="CPUUsage:">
+                <el-tag type="success">{{ taskList[0].CPUUsage }}</el-tag>
+              </el-form-item>
+              <el-form-item label="9 分钱可以处理相同图片:">
+                <el-tag type="success">{{ count }}</el-tag> 张
               </el-form-item>
             </el-form>
             <i v-else class="el-icon-time"> 请先提交任务</i>
@@ -93,15 +99,19 @@ export default {
       fileList: [],
       inputImageUrl: '',
       outputImageUrl: '',
-      taskList: [{}]
+      taskList: [{
+      }]
     }
   },
   filters: {
     time_formatter (value) {
-      return moment(value, 'X').format('L')
+      return moment(value, 'X').format('LLLL')
     }
   },
   computed: {
+    count () {
+      return 3600 / (this.taskList[0].EndTime - this.taskList[0].StartTime)
+    }
   },
   methods: {
     next () {

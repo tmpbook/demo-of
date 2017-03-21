@@ -48,17 +48,17 @@
           分析
         </el-col>
         <el-col :span="20">
-          <el-form v-if="taskList" label-position="left" inline class="display-table-expand">
-            <el-form-item label="Vlan">
+          <el-form v-if="taskList[0]" label-position="left" inline class="display-table-expand">
+            <el-form-item label="状态">
               <span>{{ taskList[0].State }}</span>
             </el-form-item>
-            <el-form-item label="Vlan">
+            <el-form-item label="任务ID">
               <span>{{ taskList[0].TaskId }}</span>
             </el-form-item>
-            <el-form-item label="Vlan">
+            <el-form-item label="开始时间">
               <span>{{ taskList[0].StartTime }}</span>
             </el-form-item>
-            <el-form-item label="Vlan">
+            <el-form-item label="结束时间">
               <span>{{ taskList[0].EndTime }}</span>
             </el-form-item>
           </el-form>
@@ -95,7 +95,12 @@ export default {
       fileList: [],
       inputImageUrl: '',
       outputImageUrl: '',
-      taskList: []
+      taskList: [{
+        State: '',
+        TaskId: '',
+        StartTime: '',
+        EndTime: ''
+      }]
     }
   },
   filters: {

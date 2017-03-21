@@ -2,24 +2,25 @@
   <div class="crud">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        图片画风装换
+          <el-steps :space="100" :active="active" style="">
+            <el-step icon="edit" title="选取文件"></el-step>
+            <el-step icon="upload" title="提交任务"></el-step>
+            <el-step icon="picture" title="返回结果"></el-step>
+          </el-steps>
       </div>
     
-
       <el-row>
         <el-col :span="12">
           <el-upload
             class="upload-demo"
             action="//jsonplaceholder.typicode.com/posts/"
             :file-list="fileList"
-            list-type="picture"
             :auto-upload="true">
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload" :loading="searching">上传到服务器</el-button>
+            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload" :loading="searching">提交任务</el-button>
             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过5M</div>
           </el-upload>
         </el-col>
-        <el-col :span="12"></el-col>
       </el-row>
 
       <el-row style="margin-top: 30px">
@@ -65,6 +66,7 @@ export default {
   name: 'Demo1',
   data () {
     return {
+      active: 1,
       searching: false,
       fileList: [],
       inputImageUrl: '',
@@ -79,6 +81,9 @@ export default {
   computed: {
   },
   methods: {
+    next () {
+      if (this.active++ > 2) this.active = 0
+    },
     debounceLoadAccountInfo: _.debounce(
       function () {
         this.loadAccountInfo()
@@ -87,6 +92,7 @@ export default {
     ),
     submitUpload () {
       let vm = this
+      vm.active = 2
       vm.searching = true
       var payload = {
         Region: 'cn-bj2',
@@ -106,7 +112,7 @@ export default {
           message: '请求处理成功',
           type: 'success'
         })
-        // vm.responseList = response.data
+        vm.active = 3
         vm.searching = false
         vm.outputImageUrl = '/data/out.png'
       })

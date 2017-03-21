@@ -22,7 +22,7 @@
             :on-remove="handleRemove"
             :file-list="fileList"
             list-type="picture">
-            <el-button size="small" type="primary" @click="submitUpload">点击上传</el-button>
+            <el-button size="small" type="primary" @click="submitUpload" :loading="searching">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过5M</div>
           </el-upload>
         </el-col>
@@ -103,7 +103,7 @@ export default {
         })
         // vm.responseList = response.data
         vm.searching = false
-        vm.outputImageUrl = '/tmp/out.png'
+        vm.outputImageUrl = '/data/out.png'
       })
       .catch(function (error) {
         console.info(error)

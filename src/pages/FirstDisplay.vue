@@ -2,32 +2,31 @@
   <div class="crud">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <el-steps :space="100" :active="active" finish-status="success" style="float: right;">
-          <el-step title="选取文件"></el-step>
-          <el-step title="提交算法"></el-step>
-          <el-step title="返回结果"></el-step>
-          <el-step title="详细参数"></el-step>
+        <el-steps :space="100" :active="active" style="float: right;">
+          <el-step icon="edit" title="选取文件"></el-step>
+          <el-step icon="upload" title="提交算法"></el-step>
+          <el-step icon="picture" title="返回结果"></el-step>
+          <el-step icon="information" title="详细参数"></el-step>
         </el-steps>
-        <div style="height: 70px">图像画风转换</div>
+        <el-row>
+          <el-col :span="6">
+            <el-upload
+              class="upload-demo"
+              action="//jsonplaceholder.typicode.com/posts/"
+              :file-list="fileList"
+              :auto-upload="true">
+              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+              <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload" :loading="searching">提交任务</el-button>
+              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过5M</div>
+            </el-upload>
+          </el-col>
+        </el-row>
       </div>
 
-      <el-row>
-        <el-col :span="12">
-          <el-upload
-            class="upload-demo"
-            action="//jsonplaceholder.typicode.com/posts/"
-            :file-list="fileList"
-            :auto-upload="true">
-            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload" :loading="searching">提交任务</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过5M</div>
-          </el-upload>
-        </el-col>
-      </el-row>
 
       <el-row style="margin-top: 30px">
         <el-col :span="4">
-          输入
+          输入 - >
         </el-col>
         <el-col :span="20">
           <img style="" v-if="inputImageUrl" :src="inputImageUrl" class="avatar">
@@ -36,7 +35,7 @@
       </el-row>
       <el-row style="margin-top: 20px">
         <el-col :span="4">
-          输出
+          输出 - >
         </el-col>
         <el-col :span="20">
           <img style="height: 285px" v-if="outputImageUrl" :src="outputImageUrl" class="avatar">

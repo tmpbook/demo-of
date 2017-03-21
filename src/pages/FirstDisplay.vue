@@ -18,11 +18,11 @@
           <el-upload
             class="upload-demo"
             action="//jsonplaceholder.typicode.com/posts/"
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
             :file-list="fileList"
-            list-type="picture">
-            <el-button size="small" type="primary" @click="submitUpload" :loading="searching">点击上传</el-button>
+            list-type="picture"
+            :auto-upload="true">
+            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload" :loading="searching">上传到服务器</el-button>
             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过5M</div>
           </el-upload>
         </el-col>

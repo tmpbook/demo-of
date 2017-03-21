@@ -103,7 +103,7 @@ export default {
         })
         // vm.responseList = response.data
         vm.searching = false
-        vm.outputImageUrl = "/tmp/out.png"
+        vm.outputImageUrl = '/tmp/out.png'
       })
       .catch(function (error) {
         console.info(error)

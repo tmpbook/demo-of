@@ -2,18 +2,11 @@
   <div class="crud">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        图片风格化
+        图片画风装换
       </div>
-
-      <el-row style="margin-top: 30px">
-        <el-col :span="12">
-          <img style="" v-if="inputImageUrl" :src="inputImageUrl" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-col>
-      </el-row>
     
 
-      <el-row style="margin-top: 30px">
+      <el-row>
         <el-col :span="12">
           <el-upload
             class="upload-demo"
@@ -29,10 +22,22 @@
         <el-col :span="12"></el-col>
       </el-row>
 
-      <el-row :gutter="20" style="margin-top: 30px">
-        <el-col :span="12">
-          <img style="height: 285px" v-if="outputImageUrl" :src="outputImageUrl" class="avatar">
+      <el-row style="margin-top: 30px">
+        <el-col :span="4">
+          原图
+        </el-col>
+        <el-col :span="20">
+          <img style="" v-if="inputImageUrl" :src="inputImageUrl" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-col>
+      </el-row>
+      <el-row style="margin-top: 20px">
+        <el-col :span="4">
+          结果
+        </el-col>
+        <el-col :span="20">
+          <img style="height: 285px" v-if="outputImageUrl" :src="outputImageUrl" class="avatar">
+          <i v-else class="el-icon-time"> 请先提交一个任务</i>
         </el-col>
       </el-row>
     </el-card>

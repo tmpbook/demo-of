@@ -60,8 +60,8 @@
               <el-form-item label="结束时间:">
                 <el-tag type="primary">{{ taskList[0].EndTime | time_formatter }}</el-tag>
               </el-form-item>
-              <el-form-item label="CPUUsage:">
-                <el-tag type="primary">{{ taskList[0].CPUUsage }}</el-tag>
+              <el-form-item label="CPU时间:">
+                <el-tag type="primary">{{ taskList[0].CPUUsage }}</el-tag> 毫秒
               </el-form-item>
               <el-form-item label="9 分钱可以处理相同图片:">
                 约 <el-tag type="danger">{{ count }}</el-tag> 张

@@ -169,6 +169,7 @@ export default {
           type: 'success'
         })
         vm.taskList = response.data['TaskSet']
+        vm.active = 3
       })
       .catch(function (error) {
         console.info(error)

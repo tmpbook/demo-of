@@ -3,13 +3,13 @@
     <el-card class="box-card" style="position: relative">
       <div slot="header" class="clearfix header">
         <div class="actions">
-          <el-button size="small"  type="primary"  v-loading="active == 2"
-          :disabled="false" @click.prevent="submit">批量水印</el-button>
+          <el-button size="small"  type="primary"
+          :disabled="files.length < 1" @click.prevent="submit">批量水印</el-button>
           <el-button size="small"  type="primary"
             :disabled="active !== 3" @click="review">查看结果</el-button>
           <el-button size="small"  type="primary" :disabled="active == 2" @click="clear">清空</el-button>
         </div>
-        <el-steps class="steps" :space="100" :active="active">
+        <el-steps class="steps" :space="100" :active="active" finish-status="finish">
           <el-step title="上传"></el-step>
           <el-step title="处理"></el-step>
           <el-step title="完成"></el-step>
@@ -18,9 +18,7 @@
       <el-upload class="upload"
         action="/api/posts/"
         :multiple="true"
-        :on-error="fix"
-        :on-preview="preview"
-        :on-remove="remove"
+        :before-upload="cancel"
         :file-list="files"
         list-type="picture-card">
         <div  class="uploadBtn">
@@ -35,31 +33,19 @@
           批量处理水印后输出：
           <vueImages :imgs="images" :showclosebutton="true" :showthumbnails="true" />
         </div>
-      </div>
+    </div>
     </el-card>
-    <el-dialog title="本次处理结果" size="large" v-model="showDetail" v-if="detail">
-        <el-row style="margin-top: 20px">
-            <el-form label-position="left" class="display-table-expand">
-              <el-form-item label="任务数:">
-                <el-tag type="success">100</el-tag>
-              </el-form-item>
-              <el-form-item label="状态:">
-                <el-tag type="success">{{ detail.State }}</el-tag>
-              </el-form-item>
-              <el-form-item label="开始时间:">
-                <el-tag type="primary">{{ detail.StartTime | timer }}</el-tag>
-              </el-form-item>
-              <el-form-item label="结束时间:">
-                <el-tag type="primary">{{ detail.EndTime | timer }}</el-tag>
-              </el-form-item>
-              <el-form-item label="CPU时间:">
-                <el-tag type="primary">{{ detail.CPUUsage }}</el-tag> 毫秒
-              </el-form-item>
-              <!--el-form-item label="9 分钱可以处理相同图片:">
-                约 <el-tag type="danger">{{ count }}</el-tag> 张
-              </el-form-item-->
-            </el-form>
-        </el-row>
+    <el-dialog title="本次处理结果" size="large" v-model="showDetail" v-if="tasks.length">
+      共处理图片{{ images.length }} 张，耗时 {{ duration.toFixed(5) }}分钟，花费 {{ (0.09/60 * duration).toFixed(5) }}元
+      <div style="max-height: 500px;overflow-y: auto">
+      <el-table :data="tasks" style="width:100%">
+        <el-table-column prop="i" label="任务"></el-table-column>
+        <el-table-column prop="State" label="状态"></el-table-column>
+        <el-table-column prop="ts" label="开始时间"></el-table-column>
+        <el-table-column prop="te" label="结束时间"></el-table-column>
+        <el-table-column prop="CPUUsage" label="CPU耗时(ms)"></el-table-column>
+      </el-table>
+    </div>
       </el-dialog>
   </div>
 </template>
@@ -157,52 +143,23 @@ export default {
       uploaded: false,
       finished: false,
       files: [],
+      tasks: [],
       images
     }
   },
-  filters: {
-    timer (value) {
-      return moment(value, 'X').format('L')
-    }
-  },
-  computed: {
-  },
   methods: {
-    upload: function() {
-
-    },
-    remove: function() {
-
-    },
-    preview: function() {
-
-    },
-    prefetch: function() {
-
-    },
-    cancel: function() {
+    cancel: function(file) {
       const {name, url} = file;
-      const len = files.length;
+      const len = this.files.length;
 
-      /*this.files.push({
+
+      this.files.push({
         name,
         url: `${dir.in}/${len+1}.jpeg`,
         status: 'finished'
       })
 
-      return false;*/
-    },
-    fix: function(error, file, files) {
-      const {name, url} = file;
-      const len = files.length;
-
-      files.push({
-        name,
-        url: `${dir.in}/${len+1}.jpeg`,
-        status: 'finished'
-      })
-
-      this.files = files;
+      return false;
     },
     clear: function() {
       this.files = [];
@@ -235,7 +192,12 @@ export default {
             type: 'success'
           })
 
-          this.tasks = res.data.TaskSet;
+          this.tasks = res.data.TaskSet.map((task, i)=> {
+            const te = moment(task.EndTime, 'X').format('L');
+            const ts = moment(task.StartTime, 'X').format('L');
+
+            return {...task, te, ts, i}
+          });
           this.review();
         }).catch(error=> {
           console.error(error);
@@ -248,10 +210,15 @@ export default {
     }
 
   },
-  watch: {},
-  mounted () {
-    this.prefetch()
+  computed: {
+    duration: function(){
+      return this.tasks.reduce((pre, curr)=> {
+        const tm = curr.EndTime - curr.StartTime;
+        return tm / 60 + pre;
+      }, 0)
+    }
   },
+  mounted () {},
   components: {
     vueImages
   }
@@ -265,15 +232,27 @@ export default {
   .images .vue-images .gallery .wrapper {
     display: inline-block;
     margin-right: 10px;
+    width: 160px;
+    height: 100px;
+  }
+
+  .images .vue-images .gallery .wrapper  img {
+    width: 160px;
+    height: 100px;
+    border-radius: 5px;
   }
 
   .el-upload-list--picture-card .el-upload-list__item, .el-upload.el-upload--picture-card {
-    width: 240px;
+    width: 160px;
     height: 100px;
   }
 
   .el-upload.el-upload--picture-card {
     line-height: 100px;
+  }
+
+  .gallery .fancybox .image-wrapper .image {
+    width: 640px;
   }
 </style>
 <style scoped>
@@ -300,9 +279,7 @@ export default {
   }
 
   .upload {
-    max-height: 320px;
     max-width: 1200px;
-    overflow-y: auto;
     overflow-x: hidden;
   }
 

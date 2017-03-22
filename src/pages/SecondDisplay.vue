@@ -4,7 +4,7 @@
       <div slot="header" class="clearfix header">
         <div class="actions">
           <el-button size="small"  type="primary"  v-loading="active == 2"
-          :disabled="files.length < 1" @click.prevent="submit">批量水印</el-button>
+          :disabled="false" @click.prevent="submit">批量水印</el-button>
           <el-button size="small"  type="primary"
             :disabled="active !== 3" @click="review">查看结果</el-button>
           <el-button size="small"  type="primary" :disabled="active == 2" @click="clear">清空</el-button>

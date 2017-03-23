@@ -47,7 +47,8 @@
       </div>
     </el-dialog>
     <el-dialog title="本次处理结果" size="large" v-model="showDetail" v-if="tasks.length">
-      共处理图片{{ images.length }} 张，耗时 {{ duration.toFixed(3) }}秒，花费 {{ (9/3600 * duration).toFixed(3) }}分钱
+      100次并发任务耗时：<el-tag>{{ duration.toFixed(3) }}</el-tag> 秒，100次任务CPU耗时：<el-tag>{{ timer }}</el-tag> 毫秒，CPU耗时小于1小时不计费。单价：0.09元/核每小时
+      <!--共处理图片{{ images.length }} 张，耗时 {{ duration.toFixed(3) }}秒，花费 {{ (9/3600 * duration).toFixed(3) }}分钱-->
       <div style="max-height: 500px;overflow-y: auto">
       <el-table :data="tasks" style="width:100%">
         <el-table-column prop="i" label="任务"></el-table-column>
@@ -106,7 +107,8 @@
 import axios from 'axios'
 import moment from 'moment'
 import backendConf from '../config/backendConf'
-import vueImages from 'vue-images/dist/vue-images.js';
+import vueImages from 'vue-images/dist/vue-images.js'
+import _ from 'lodash'
 
 import 'vue-images/dist/vue-images.css';
 
@@ -262,6 +264,13 @@ export default {
         const tm = curr.EndTime - curr.StartTime;
         return tm  + pre;
       }, 0)
+    },
+    timer: function () {
+      let count = 0
+      _.forEach(this.tasks, function(data) {
+        count += data.CPUUsage
+      })
+      return count
     }
   },
   mounted () {

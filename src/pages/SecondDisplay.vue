@@ -239,8 +239,8 @@ export default {
           })
 
           this.tasks = res.data.TaskSet.map((task, i)=> {
-            const te = moment(task.EndTime).format('YYYY-MM-DD hh:mm:ss');
-            const ts = moment(task.StartTime).format('YYYY-MM-DD hh:mm:ss');
+            const te = moment(task.EndTime).format('LLLL');
+            const ts = moment(task.StartTime).format('LLLL');
 
             return {...task, te, ts, i}
           });
@@ -264,7 +264,9 @@ export default {
       }, 0)
     }
   },
-  mounted () {},
+  mounted () {
+    document.title = 'TIC · 自定义水印'
+  },
   components: {
     vueImages
   }

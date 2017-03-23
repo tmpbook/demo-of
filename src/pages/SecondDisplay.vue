@@ -47,7 +47,7 @@
       </div>
     </el-dialog>
     <el-dialog title="本次处理结果" size="large" v-model="showDetail" v-if="tasks.length">
-      100次并发任务耗时：<el-tag>{{ duration.toFixed(3) }}</el-tag> 秒，100次任务CPU耗时：<el-tag>{{ timer }}</el-tag> 毫秒，CPU耗时小于1小时不计费。单价：0.09元/核每小时
+      100次并发任务耗时：<el-tag>{{ duration.toFixed(1) }}</el-tag> 秒，100次任务CPU耗时：<el-tag>{{ timer }}</el-tag> 毫秒，CPU耗时小于1小时不计费。单价：0.09元/核每小时
       <!--共处理图片{{ images.length }} 张，耗时 {{ duration.toFixed(3) }}秒，花费 {{ (9/3600 * duration).toFixed(3) }}分钱-->
       <div style="max-height: 500px;overflow-y: auto">
       <el-table :data="tasks" style="width:100%">

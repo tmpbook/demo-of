@@ -4,7 +4,7 @@
       <div slot="header" class="clearfix header">
         <div class="actions">
           <el-button size="small"  type="primary"
-          :disabled="files.length < 1" @click.prevent="submit">批量水印</el-button>
+          :disabled="files.length < 1" @click="mark">批量水印</el-button>
           <el-button size="small"  type="primary"
             :disabled="active !== 3" @click="review">查看结果</el-button>
           <el-button size="small"  type="primary" :disabled="active == 2" @click="clear">清空</el-button>
@@ -16,7 +16,7 @@
         </el-steps>
       </div>
       <el-upload class="upload"
-        action="/api/posts/"
+        action="http://106.75.30.158/api/posts/"
         :multiple="true"
         :before-upload="cancel"
         :file-list="files"
@@ -35,8 +35,19 @@
         </div>
     </div>
     </el-card>
+    <el-dialog title="批量水印" v-model="showMarkDialog" size="tiny">
+      <el-form :model="form" label-width="80px" style="margin-right:50px;">
+        <el-form-item label="水印">
+          <el-input v-model="form.Mark" auto-complete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="showMarkDialog = false">取 消</el-button>
+        <el-button type="primary" @click="()=>submit(form.Mark)">确 定</el-button>
+      </div>
+    </el-dialog>
     <el-dialog title="本次处理结果" size="large" v-model="showDetail" v-if="tasks.length">
-      共处理图片{{ images.length }} 张，耗时 {{ duration.toFixed(5) }}分钟，花费 {{ (0.09/60 * duration).toFixed(5) }}元
+      共处理图片{{ images.length }} 张，耗时 {{ duration.toFixed(3) }}秒，花费 {{ (9/3600 * duration).toFixed(3) }}分钱
       <div style="max-height: 500px;overflow-y: auto">
       <el-table :data="tasks" style="width:100%">
         <el-table-column prop="i" label="任务"></el-table-column>
@@ -122,8 +133,6 @@ const submitParams = {
   ImageName: 'cn-bj2.ugchub.service.ucloud.cn/tic_demo/watermark:1.0.2',
   TaskName: 'tic_demo',
   Timeout: 120,
-  OutputDir: '/tmp',
-  OutputFileName: '1.png',
   ProjectId: 'org-a3nvhv'
 }
 
@@ -142,22 +151,54 @@ export default {
       showDetail: false,
       uploaded: false,
       finished: false,
+      showMarkDialog: false,
       files: [],
+      cache: {},
       tasks: [],
+      form: {Mark: 'UCloud'},
       images
     }
   },
   methods: {
-    cancel: function(file) {
-      const {name, url} = file;
+    cancel: function({uid}) {
       const len = this.files.length;
+      const name = `${len + 1}.jpeg`;
+      const url = `${dir.in}/${name}`;
+      let count = 0;
 
-
-      this.files.push({
+      const file = {
+        url,
+        uid,
         name,
-        url: `${dir.in}/${len+1}.jpeg`,
-        status: 'finished'
-      })
+        size: 2431884,
+        percentage: 0,
+        status: 'uploading',
+        showProgress: true
+      }
+
+      this.files.push(file);
+      this.cache[len] = file;
+
+      const unwatch = this.$watch('cache.'+ len, function(file){
+          file.showProgress && file.status === 'success' && (file.status = 'uploading')
+      }, {deep: true, immediate: true})
+
+      const next = ()=> {
+        count ++;
+
+        if (count > 9) {
+          unwatch()
+
+          file.status = 'success';
+          file.showProgress = false;
+        } else {
+          file.percentage += 10;
+
+          setTimeout(next, 60)
+        }
+      }
+
+      setTimeout(next, 80)
 
       return false;
     },
@@ -167,8 +208,13 @@ export default {
       this.tasks = [];
       this.showDetail = false;
     },
-    submit: function() {
+    mark: function() {
+      this.showMarkDialog = true;
+      this.form = {Mark: 'UCloud'}
+    },
+    submit: function(Mark) {
       this.active = 2;
+      this.showMarkDialog = false;
 
       const done = ()=> {
         this.$message({
@@ -180,7 +226,7 @@ export default {
         this.submited();
       }
 
-      axios.get(url + 'api/submit_task2/', {params: submitParams})
+      axios.get(url + 'api/submit_task2/', {params: {...submitParams, Mark}})
         .then(done)
         .catch(done)
     },
@@ -193,8 +239,8 @@ export default {
           })
 
           this.tasks = res.data.TaskSet.map((task, i)=> {
-            const te = moment(task.EndTime, 'X').format('L');
-            const ts = moment(task.StartTime, 'X').format('L');
+            const te = moment(task.EndTime).format('YYYY-MM-DD hh:mm:ss');
+            const ts = moment(task.StartTime).format('YYYY-MM-DD hh:mm:ss');
 
             return {...task, te, ts, i}
           });
@@ -214,7 +260,7 @@ export default {
     duration: function(){
       return this.tasks.reduce((pre, curr)=> {
         const tm = curr.EndTime - curr.StartTime;
-        return tm / 60 + pre;
+        return tm  + pre;
       }, 0)
     }
   },
@@ -231,13 +277,13 @@ export default {
 
   .images .vue-images .gallery .wrapper {
     display: inline-block;
-    margin-right: 10px;
+    margin-right: 7px;
     width: 160px;
     height: 100px;
   }
 
   .images .vue-images .gallery .wrapper  img {
-    width: 160px;
+    width: 158px;
     height: 100px;
     border-radius: 5px;
   }
@@ -251,7 +297,7 @@ export default {
     line-height: 100px;
   }
 
-  .gallery .fancybox .image-wrapper .image {
+  .images .fancybox .image-wrapper .image {
     width: 640px;
   }
 </style>

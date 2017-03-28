@@ -1,5 +1,6 @@
 <template>
   <div class="crud">
+   <h3>基于UGC图片水印高并发场景</h3>
     <el-card class="box-card" style="position: relative">
       <div slot="header" class="clearfix header">
         <div class="actions">
@@ -28,13 +29,37 @@
         <i class="el-icon-plus avatar-uploader-icon"></i>
       </el-upload>
       <div class="images" v-loading="active == 2">
-        <span v-if="active !== 3">请先上传文件，然后进行批量处理</span>
+        <span v-if="active !== 3">请先上传文件，然后进行
+          <el-button size="small"  type="primary"
+          :disabled="files.length < 1" @click="mark">批量水印</el-button> 处理</span>
         <div v-else>
           批量处理水印后输出：
           <vueImages :imgs="images" :showclosebutton="true" :showthumbnails="true" />
         </div>
     </div>
     </el-card>
+
+    <h4>任务详情：</h4>
+    <el-card class="box-card" style="position: relative; margin-top: 10px">
+      <div style="max-height: 500px;overflow-y: auto">
+        <el-table :data="tasks" style="width:100%">
+          <el-table-column prop="i" label="任务">
+            <template scope="scope">
+              <el-tag
+                :type="scope.row.i === 'success' ? 'success' : 'primary'"
+                close-transition>{{scope.row.i}}</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column prop="State" label="状态"></el-table-column>
+          <el-table-column prop="ts" label="开始时间"></el-table-column>
+          <el-table-column prop="te" label="结束时间"></el-table-column>
+          <el-table-column prop="CPUUsage" label="CPU耗时(ms)"></el-table-column>
+        </el-table>
+        <p v-if="showDetail">100次并发任务耗时：<el-tag>{{ duration.toFixed(1) }}</el-tag> 秒，100次任务CPU耗时：<el-tag>{{ timer }}</el-tag> 毫秒，CPU耗时小于1小时不计费。单价：0.09元/核每小时</p>
+        <p v-else>请先上传文件，然后进行批量处理</p>
+      </div>
+    </el-card>
+
     <el-dialog title="批量水印" v-model="showMarkDialog" size="tiny">
       <el-form :model="form" label-width="80px" style="margin-right:50px;">
         <el-form-item label="水印">
@@ -46,23 +71,25 @@
         <el-button type="primary" @click="()=>submit(form.Mark)">确 定</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="本次处理结果" size="large" v-model="showDetail" v-if="true">
+    <!--<el-dialog title="本次处理结果" size="large" v-model="showDetail" v-if="true">
       <h3>100次并发任务耗时：<el-tag>{{ duration.toFixed(1) }}</el-tag> 秒，100次任务CPU耗时：<el-tag>{{ timer }}</el-tag> 毫秒，CPU耗时小于1小时不计费。单价：0.09元/核每小时</h3>
-      <!--共处理图片{{ images.length }} 张，耗时 {{ duration.toFixed(3) }}秒，花费 {{ (9/3600 * duration).toFixed(3) }}分钱-->
       <div style="max-height: 500px;overflow-y: auto">
-      <el-table :data="tasks" style="width:100%">
-        <el-table-column prop="i" label="任务"></el-table-column>
-        <el-table-column prop="State" label="状态"></el-table-column>
-        <el-table-column prop="ts" label="开始时间"></el-table-column>
-        <el-table-column prop="te" label="结束时间"></el-table-column>
-        <el-table-column prop="CPUUsage" label="CPU耗时(ms)"></el-table-column>
-      </el-table>
-    </div>
-      </el-dialog>
+        <el-table :data="tasks" style="width:100%">
+          <el-table-column prop="i" label="任务"></el-table-column>
+          <el-table-column prop="State" label="状态"></el-table-column>
+          <el-table-column prop="ts" label="开始时间"></el-table-column>
+          <el-table-column prop="te" label="结束时间"></el-table-column>
+          <el-table-column prop="CPUUsage" label="CPU耗时(ms)"></el-table-column>
+        </el-table>
+      </div>
+    </el-dialog>-->
   </div>
 </template>
 
 <style scope>
+  .crud {
+    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+  }
   hr {
     color: #99a9bf;
   }

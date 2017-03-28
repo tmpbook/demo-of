@@ -49,8 +49,8 @@
           <el-table-column prop="State" label="状态">
             <template scope="scope">
               <el-tag
-                :type="scope.row.State === 'success' ? 'success' : 'primary'"
-                close-transition>{{scope.row.i}}</el-tag>
+                :type="scope.row.State === 'Success' ? 'success' : 'primary'"
+                close-transition>{{scope.row.State}}</el-tag>
             </template>
           </el-table-column>
           <el-table-column prop="ts" label="开始时间"></el-table-column>

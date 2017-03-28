@@ -42,12 +42,14 @@
     <h4>任务详情：</h4>
     <el-card class="box-card" style="position: relative; margin-top: 10px">
       <div style="max-height: 500px;overflow-y: auto">
+        <p v-if="showDetail">100次并发任务耗时：<el-tag>{{ duration.toFixed(1) }}</el-tag> 秒，100次任务CPU耗时：<el-tag>{{ timer }}</el-tag> 毫秒，CPU耗时小于1小时不计费。单价：0.09元/核每小时</p>
+        <p v-else>请先上传文件，然后进行批量处理</p>
         <el-table :data="tasks" style="width:100%">
           <el-table-column prop="i" label="任务"></el-table-column>
           <el-table-column prop="State" label="状态">
             <template scope="scope">
               <el-tag
-                :type="scope.row.i === 'success' ? 'success' : 'primary'"
+                :type="scope.row.State === 'success' ? 'success' : 'primary'"
                 close-transition>{{scope.row.i}}</el-tag>
             </template>
           </el-table-column>
@@ -55,8 +57,6 @@
           <el-table-column prop="te" label="结束时间"></el-table-column>
           <el-table-column prop="CPUUsage" label="CPU耗时(ms)"></el-table-column>
         </el-table>
-        <p v-if="showDetail">100次并发任务耗时：<el-tag>{{ duration.toFixed(1) }}</el-tag> 秒，100次任务CPU耗时：<el-tag>{{ timer }}</el-tag> 毫秒，CPU耗时小于1小时不计费。单价：0.09元/核每小时</p>
-        <p v-else>请先上传文件，然后进行批量处理</p>
       </div>
     </el-card>
 

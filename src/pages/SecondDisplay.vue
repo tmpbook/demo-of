@@ -43,14 +43,14 @@
     <el-card class="box-card" style="position: relative; margin-top: 10px">
       <div style="max-height: 500px;overflow-y: auto">
         <el-table :data="tasks" style="width:100%">
-          <el-table-column prop="i" label="任务">
+          <el-table-column prop="i" label="任务"></el-table-column>
+          <el-table-column prop="State" label="状态">
             <template scope="scope">
               <el-tag
                 :type="scope.row.i === 'success' ? 'success' : 'primary'"
                 close-transition>{{scope.row.i}}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="State" label="状态"></el-table-column>
           <el-table-column prop="ts" label="开始时间"></el-table-column>
           <el-table-column prop="te" label="结束时间"></el-table-column>
           <el-table-column prop="CPUUsage" label="CPU耗时(ms)"></el-table-column>
@@ -244,6 +244,9 @@ export default {
     submit: function(Mark) {
       this.active = 2;
       this.showMarkDialog = false;
+      setTimeout(() => {
+        this.submited();
+      }, 100);
 
       const done = ()=> {
         this.$message({

@@ -41,7 +41,7 @@
 
     <h4>任务详情：</h4>
     <el-card class="box-card" style="position: relative; margin-top: 10px">
-      <div style="max-height: 700px;overflow-y: auto">
+      <div style="max-height: 500px;overflow-y: auto">
         <el-table :data="tasks" style="width:100%">
           <el-table-column prop="i" label="任务"></el-table-column>
           <el-table-column prop="State" label="状态">

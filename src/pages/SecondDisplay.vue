@@ -244,9 +244,6 @@ export default {
     submit: function(Mark) {
       this.active = 2;
       this.showMarkDialog = false;
-      setTimeout(() => {
-        this.submited();
-      }, 100);
 
       const done = ()=> {
         this.$message({
